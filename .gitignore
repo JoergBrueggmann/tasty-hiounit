@@ -1,0 +1,6 @@
+.stack-work/
+.iotest
+info
+*.txt
+src/BuildInfo.hs
+*~
