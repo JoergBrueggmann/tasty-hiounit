@@ -1,5 +1,5 @@
 name:                tasty-hiounit
-version:             0.1.0
+version:             0.1.1
 github:              "githubuser/tasty-hiounit"
 license:             BSD-3-Clause
 author:              "Jörg K.-H. W. Brüggmann"
@@ -27,6 +27,8 @@ dependencies:
 - directory
 - process
 - tasty
+- tasty-hunit
+- tasty-quickcheck
 - tasty-hunit
 - template-haskell
 

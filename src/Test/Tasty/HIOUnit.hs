@@ -13,9 +13,9 @@ Portability : POSIX
 
 module Test.Tasty.HIOUnit
     (
-        testCase, 
-        IOTestParameter(..), 
-        IOFunctionDefinition(..), 
+        testCase,
+        IOTestParameter(..),
+        IOFunctionDefinition(..),
         sMultiLine
     ) where
 
@@ -42,13 +42,13 @@ import qualified Data.String as Str
 data IOTestParameter =
     IOTestParameter {
         -- | may be a string to to inject as 'stdin' stream into
-        riotParameterStdIn :: Maybe String, 
+        riotParameterStdIn :: Maybe String,
         -- | Haskell function definition
-        riotIOFunctionDefinition :: IOFunctionDefinition, 
+        riotIOFunctionDefinition :: IOFunctionDefinition,
         -- | function verify stdout as test result, or 'Nothing' for no expectations regarding stdout
-        riotParameterStdOut :: Maybe String, 
+        riotParameterStdOut :: Maybe String,
         -- | function verify stderr as test result, or 'Nothing' for no expectations regarding stderr
-        riotParameterStdErr :: Maybe String, 
+        riotParameterStdErr :: Maybe String,
         -- | function verify exit code as test result, or 'Nothing' for no expectations regarding exit code
         riotParameterExitCode :: Maybe Int
     }
@@ -58,11 +58,11 @@ data IOTestParameter =
 {- |
 * prefix: fdef
 -}
-data IOFunctionDefinition = 
+data IOFunctionDefinition =
     IOFunctionDefinition {
         -- | module name, has to start with upper case letter
-        rsModuleName :: String, 
-        rmsFunctionNameToExportAndExecute :: Maybe String, 
+        rsModuleName :: String,
+        rmsFunctionNameToExportAndExecute :: Maybe String,
         rsHaskellSourceCode :: String
     }
 
@@ -73,7 +73,7 @@ testCase
     :: String  -- ^ name of test case
     -> IOTestParameter  -- ^ parameter to define input, code to be executed and expected results
     -> T.TestTree
-testCase nameOfTestCase iotestParameter = 
+testCase nameOfTestCase iotestParameter =
     HU.testCase
         nameOfTestCase
         (assertFromIOTestParameter iotestParameter)
@@ -81,12 +81,14 @@ testCase nameOfTestCase iotestParameter =
         assertFromIOTestParameter :: IOTestParameter -> HU.Assertion
         assertFromIOTestParameter (IOTestParameter msStdIn iotIOFunctionDefinition msStdOut msStdErr mnExitCode) =
             do
-                Dyn.writeSourceCodeFileIfNecessary
+                done <- Dyn.writeSourceCodeFileIfNecessary
                     "./.iotest/"
                     (rsModuleName iotIOFunctionDefinition)
                     [ sFunctionNameToExportAndExecute iotIOFunctionDefinition ]
                     (rsHaskellSourceCode iotIOFunctionDefinition)
-                executionResult <- 
+                executionResult <-
+                    done
+                    `seq`
                     Sh.runCommandWithIO
                         Nothing
                         Nothing
@@ -96,17 +98,17 @@ testCase nameOfTestCase iotestParameter =
                 Sfr.ifJust
                     executionResult
                     (assertionFromExecutionResult msStdOut msStdErr mnExitCode)
-                    (HU.assertFailure ("Did not execute module under test \"" ++ (rsModuleName iotIOFunctionDefinition) ++ "\"!"))
+                    (HU.assertFailure ("Did not execute module under test \"" ++ rsModuleName iotIOFunctionDefinition ++ "\"!"))
         sFunctionNameToExportAndExecute :: IOFunctionDefinition -> String
-        sFunctionNameToExportAndExecute iotIOFunctionDefinition = 
-            Sfr.ifJust 
-                (rmsFunctionNameToExportAndExecute iotIOFunctionDefinition) 
+        sFunctionNameToExportAndExecute iotIOFunctionDefinition =
+            Sfr.ifJust
+                (rmsFunctionNameToExportAndExecute iotIOFunctionDefinition)
                 -- then
-                id 
+                id
                 -- else
                 "main"
         assertionFromExecutionResult :: Maybe String -> Maybe String -> Maybe Int -> (String, String, Int) -> HU.Assertion
-        assertionFromExecutionResult msStdOut msStdErr mnExitCode (sActualStdOut, sActualStdErr, nActualExitCode) = 
+        assertionFromExecutionResult msStdOut msStdErr mnExitCode (sActualStdOut, sActualStdErr, nActualExitCode) =
             do
                 Sfr.ifJust
                     msStdOut
@@ -154,7 +156,7 @@ sourceCode = "main :: IO ()\nmain = putStrLn "Hello..."\n"
 
 -}
 sMultiLine :: THQ.QuasiQuoter
-sMultiLine = THQ.QuasiQuoter 
+sMultiLine = THQ.QuasiQuoter
         ((\a -> [|Str.fromString a|]) . trimLeadingNewline . removeCRs)
         (error "Cannot use q as a pattern")
         (error "Cannot use q as a type")

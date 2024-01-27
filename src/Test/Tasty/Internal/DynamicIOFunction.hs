@@ -26,6 +26,7 @@ import qualified System.IO as SIo
 import qualified System.Directory as Dir
 import qualified Data.Maybe as M
 import qualified Control.Monad
+import qualified Control.Exception.Base as Ex
 
 
 executeFromFile :: String -> String -> Maybe String -> Bool -> IO ()
@@ -54,9 +55,11 @@ executeFromFile folderPath moduleName maybeFunctionName doPreserveFiles =
 executeFromString :: Maybe String -> Maybe String -> [ String ] -> String -> Maybe String -> Bool -> IO ()
 executeFromString maybeFolderPath maybeModuleName lExportElements !sourceCodeWithoutModuleDeclaration maybeFunctionName doPreserveFiles =
     do
-        writeSourceCodeFileIfNecessary folderPath moduleName lExportElements sourceCodeWithoutModuleDeclaration
-        executeFromFile folderPath moduleName maybeFunctionName doPreserveFiles
-        deleteSourceCodeFile folderPath moduleName
+        done <- writeSourceCodeFileIfNecessary folderPath moduleName lExportElements sourceCodeWithoutModuleDeclaration
+        done `seq` (
+            do
+                executeFromFile folderPath moduleName maybeFunctionName doPreserveFiles
+                deleteSourceCodeFile folderPath moduleName)
     where
         folderPath = M.fromMaybe "./dyn/" maybeFolderPath
         moduleName = M.fromMaybe "Temp" maybeModuleName
@@ -67,7 +70,7 @@ executeFromString maybeFolderPath maybeModuleName lExportElements !sourceCodeWit
 * creates a new file if it doesnt exist and can be created
 * modifies an existing file if it would lead to a change
 -}
-writeSourceCodeFileIfNecessary :: String -> String -> [ String ] -> String -> IO ()
+writeSourceCodeFileIfNecessary :: String -> String -> [ String ] -> String -> IO Bool
 writeSourceCodeFileIfNecessary folderPath moduleName lExportElements sourceCodeWithoutModuleDeclaration =
     do
         Dir.createDirectoryIfMissing True folderPath
@@ -77,17 +80,25 @@ writeSourceCodeFileIfNecessary folderPath moduleName lExportElements sourceCodeW
                 isNecessary <- modificationNecessary
                 if isNecessary
                     then writeSourceCode
-                    else return ()
+                    else return True
             else writeSourceCode
     where
         modificationNecessary :: IO Bool
         modificationNecessary = readFile sFilePath >>= return . (sourceCode /=)
-        writeSourceCode :: IO ()
+        writeSourceCode :: IO Bool
         writeSourceCode = 
-            do
-                handle <- SIo.openFile sFilePath SIo.WriteMode
-                SIo.hPutStr handle sourceCode
-                SIo.hClose handle
+            (
+                do
+                    handle <- SIo.openFile sFilePath SIo.WriteMode
+                    SIo.hPutStr handle sourceCode
+                    SIo.hClose handle
+                    return True
+            )
+            `Ex.catch`
+            (\e ->
+                do
+                    SIo.hPutStrLn SIo.stderr ("Error: In writeSourceCodeFileIfNecessary/writeSourceCode, " ++ show (e :: Ex.SomeException))
+                    return False)
         sourceCode :: String
         sourceCode = 
             "module " ++ 
@@ -103,6 +114,7 @@ writeSourceCodeFileIfNecessary folderPath moduleName lExportElements sourceCodeW
         sExportList' [] = ""
         sExportList' ( exportElement : exportElement2 : lrExportElements ) = "        " ++ exportElement ++ ", \n" ++ sExportList' (exportElement2 : lrExportElements)
         sExportList' [exportElement] = "        " ++ exportElement ++ "\n"
+        
 
 deleteSourceCodeFile ::String -> String -> IO ()
 deleteSourceCodeFile folderPath moduleName =

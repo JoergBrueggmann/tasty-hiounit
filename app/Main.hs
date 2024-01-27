@@ -79,3 +79,78 @@ echo =
     do
         sStdIn <- getContents
         putStr sStdIn
+
+
+{-
+import qualified Control.Concurrent as Con
+import qualified Control.Monad as M
+import qualified System.IO as Sys
+
+main :: IO ()
+main =
+    do
+        Sys.hSetBuffering Sys.stdout Sys.NoBuffering
+        lmvar <- execAllParallel [ a, b, c ]
+        waitAllParallel lmvar
+        putStrLn ""
+
+execAllParallel :: [IO ()] -> IO [Con.MVar ()]
+execAllParallel = execAllParallel' []
+    where
+        execAllParallel' :: [Con.MVar ()] -> [IO ()] -> IO [Con.MVar ()]
+        execAllParallel' acc [] = return acc
+        execAllParallel' acc (io:lrio) = Con.newEmptyMVar >>= (\mvar -> M.void (Con.forkIO (io >> Con.putMVar mvar ())) >> execAllParallel' (mvar : acc) lrio)
+
+waitAllParallel :: [Con.MVar ()] -> IO ()
+waitAllParallel [] = return ()
+waitAllParallel (mvar:lrmvar) = M.void $ Con.takeMVar mvar >> waitAllParallel lrmvar
+
+a :: IO ()
+a = putStr "Vom Eise befreit sind Strom und Bäche..."
+
+b :: IO ()
+b = putStr "________________________________________"
+
+c :: IO ()
+c = putStr "----------------------------------------"
+-}
+
+
+{-
+import qualified Test.Tasty.Internal.Sequence as Seq
+
+import qualified Control.Concurrent as Con
+import qualified Control.Monad as M
+import qualified System.IO as Sys
+
+
+main :: IO ()
+main =
+    do
+        Sys.hSetBuffering Sys.stdout Sys.NoBuffering
+        (lio,mvarEnd) <- Seq.ioOpen [ a, b, c ]
+        lmvar <- execAllParallel lio
+        Seq.ioClose mvarEnd
+        waitAllParallel lmvar
+        putStrLn ""
+
+execAllParallel :: [IO ()] -> IO [Con.MVar ()]
+execAllParallel = execAllParallel' []
+    where
+        execAllParallel' :: [Con.MVar ()] -> [IO ()] -> IO [Con.MVar ()]
+        execAllParallel' acc [] = return acc
+        execAllParallel' acc (io:lrio) = Con.newEmptyMVar >>= (\mvar -> M.void (Con.forkIO (io >> Con.putMVar mvar ())) >> execAllParallel' (mvar : acc) lrio)
+
+waitAllParallel :: [Con.MVar ()] -> IO ()
+waitAllParallel [] = return ()
+waitAllParallel (mvar:lrmvar) = M.void $ Con.takeMVar mvar >> waitAllParallel lrmvar
+
+a :: IO ()
+a = putStr "Vom Eise befreit sind Strom und Bäche..."
+
+b :: IO ()
+b = putStr "__fff________________________________"
+
+c :: IO ()
+c = putStr "----------------------------------------"
+-}

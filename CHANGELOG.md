@@ -8,6 +8,24 @@ and this project adheres to the
 
 ## Unreleased
 
+## 0.1.1 - 2024-01-27
+
+### Added
+
+- - none -
+
+### Fixed
+
+- To avoid unavailable file resources, because file is created by multiple threads at the same time
+
+### Changed
+
+- - none -
+
+### Removed
+
+- - none -
+
 ## 0.1.0 - 2024-01-22
 
 ### Added

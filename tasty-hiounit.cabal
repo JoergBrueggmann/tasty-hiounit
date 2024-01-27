@@ -5,7 +5,7 @@ cabal-version: 2.2
 -- see: https://github.com/sol/hpack
 
 name:           tasty-hiounit
-version:        0.1.0
+version:        0.1.1
 description:    Please see the README on GitHub at <https://github.com/githubuser/tasty-hiounit#readme>
 homepage:       https://github.com/githubuser/tasty-hiounit#readme
 bug-reports:    https://github.com/githubuser/tasty-hiounit/issues
@@ -30,6 +30,7 @@ library
       Test.Tasty.Internal.DynamicIOFunction
       Test.Tasty.Internal.GhcApiWrap
       Test.Tasty.Internal.Safer
+      Test.Tasty.Internal.Sequence
       Test.Tasty.Internal.ShellExecute
   other-modules:
       Paths_tasty_hiounit
@@ -47,6 +48,7 @@ library
     , safe-exceptions
     , tasty
     , tasty-hunit
+    , tasty-quickcheck
     , template-haskell
   default-language: Haskell2010
 
@@ -69,6 +71,7 @@ executable hdynexec
     , tasty
     , tasty-hiounit
     , tasty-hunit
+    , tasty-quickcheck
     , template-haskell
   default-language: Haskell2010
 
@@ -77,6 +80,7 @@ test-suite tasty-hiounit-test
   main-is: Spec.hs
   other-modules:
       SpecHIOUnit
+      SpecTestHelper
       Paths_tasty_hiounit
   autogen-modules:
       Paths_tasty_hiounit
@@ -93,5 +97,6 @@ test-suite tasty-hiounit-test
     , tasty
     , tasty-hiounit
     , tasty-hunit
+    , tasty-quickcheck
     , template-haskell
   default-language: Haskell2010

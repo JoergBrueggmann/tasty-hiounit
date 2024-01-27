@@ -1,5 +1,5 @@
 {-|
-Description : provides classes and functions helping to to reduce runtime errors.
+Description : provides classes and functions helping to reduce runtime errors.
 Copyright   : (c) Jörg Karl-Heinz Walter Brüggmann, 2021-2024
 License     : BSD-3-Clause
 Maintainer  : info@joerg-brueggmann.de
