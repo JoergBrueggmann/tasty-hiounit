@@ -8,6 +8,24 @@ and this project adheres to the
 
 ## Unreleased
 
+## 0.1.2 - 2024-01-27 - 07:45
+
+### Added
+
+- - none -
+
+### Fixed
+
+- - none -
+
+### Changed
+
+- experimental code 
+
+### Removed
+
+- Remove experimental and code that is commented out
+
 ## 0.1.1 - 2024-01-27
 
 ### Added

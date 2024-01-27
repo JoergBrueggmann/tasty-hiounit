@@ -5,7 +5,7 @@ cabal-version: 2.2
 -- see: https://github.com/sol/hpack
 
 name:           tasty-hiounit
-version:        0.1.1
+version:        0.1.2
 description:    Please see the README on GitHub at <https://github.com/githubuser/tasty-hiounit#readme>
 homepage:       https://github.com/githubuser/tasty-hiounit#readme
 bug-reports:    https://github.com/githubuser/tasty-hiounit/issues
@@ -30,7 +30,6 @@ library
       Test.Tasty.Internal.DynamicIOFunction
       Test.Tasty.Internal.GhcApiWrap
       Test.Tasty.Internal.Safer
-      Test.Tasty.Internal.Sequence
       Test.Tasty.Internal.ShellExecute
   other-modules:
       Paths_tasty_hiounit
