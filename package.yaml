@@ -1,5 +1,5 @@
 name:                tasty-hiounit
-version:             0.1.2
+version:             0.1.3
 github:              "githubuser/tasty-hiounit"
 license:             BSD-3-Clause
 author:              "Jörg K.-H. W. Brüggmann"
@@ -8,11 +8,15 @@ copyright:           "2023-2024 Jörg K.-H. W. Brüggmann"
 
 extra-source-files:
 - README.md
+
+extra-doc-files:
 - CHANGELOG.md
 
 # Metadata used when publishing your package
-# synopsis:            Short description of your package
-# category:            Web
+synopsis: >
+  A test provider for the test framework *tasty* for unit tests 
+  of IO functions.
+category:            Testing
 
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
@@ -21,16 +25,15 @@ description:         Please see the README on GitHub at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
-- safe-exceptions
-- ghc
-- ghc-paths
-- directory
-- process
-- tasty
-- tasty-hunit
-- tasty-quickcheck
-- tasty-hunit
-- template-haskell
+- directory >= 1.3.7 && < 1.4
+- template-haskell >= 2.19.0 && < 2.20
+- ghc >= 9.4.8 && < 9.5
+- process >= 1.6.18 && < 1.7
+- ghc-paths >= 0.1.0 && < 0.2
+- safe-exceptions >= 0.1.7 && < 0.2
+- tasty >= 1.5 && < 1.6
+- tasty-hunit >= 0.10.1 && < 0.11
+- tasty-quickcheck >= 0.10.3 && < 0.11
 
 ghc-options:
 - -Wall

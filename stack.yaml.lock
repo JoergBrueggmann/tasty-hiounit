@@ -11,6 +11,13 @@ packages:
       size: 1944
   original:
     hackage: tasty-1.5
+- completed:
+    hackage: tasty-quickcheck-0.10.3@sha256:5388241ade0d14ae9b7885887ded6622b0c89dbda369c6e55f14f1acbf3f6566,1864
+    pantry-tree:
+      sha256: 0174d5a932be9d0e78513c245a687fe842dc8e03f68bda3b4d9b974bfa9bc99b
+      size: 332
+  original:
+    hackage: tasty-quickcheck-0.10.3
 snapshots:
 - completed:
     sha256: a81fb3877c4f9031e1325eb3935122e608d80715dc16b586eb11ddbff8671ecd

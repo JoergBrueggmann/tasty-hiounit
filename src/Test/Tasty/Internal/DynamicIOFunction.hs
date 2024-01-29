@@ -1,10 +1,18 @@
-{-
-Description : Provides functions to dynamically create source code files, compile and load them.
+{-|
+Description : ... dynamically create source code files, compile and load them.
 Copyright   : (c) Jörg Karl-Heinz Walter Brüggmann, 2021-2024
 License     : BSD-3-Clause
 Maintainer  : info@joerg-brueggmann.de
 Stability   : experimental
 Portability : POSIX
+
+The module 'Test.Tasty.Internal.DynamicIOFunction' provides helper functions to  create source code files, compile and load them, dynamically.
+
+Suggested import line:
+
+    @
+import qualified Test.Tasty.Internal.DynamicIOFunction as Dyn
+    @
 -}
 
 
@@ -29,6 +37,7 @@ import qualified Control.Monad
 import qualified Control.Exception.Base as Ex
 
 
+-- TODO: Add documentation
 executeFromFile :: String -> String -> Maybe String -> Bool -> IO ()
 executeFromFile folderPath moduleName maybeFunctionName doPreserveFiles =
     do
@@ -52,6 +61,7 @@ executeFromFile folderPath moduleName maybeFunctionName doPreserveFiles =
                         Dir.removeFile (folderPath ++ moduleName ++ ".o")
                 )
 
+-- TODO: Add documentation
 executeFromString :: Maybe String -> Maybe String -> [ String ] -> String -> Maybe String -> Bool -> IO ()
 executeFromString maybeFolderPath maybeModuleName lExportElements !sourceCodeWithoutModuleDeclaration maybeFunctionName doPreserveFiles =
     do
@@ -70,7 +80,17 @@ executeFromString maybeFolderPath maybeModuleName lExportElements !sourceCodeWit
 * creates a new file if it doesnt exist and can be created
 * modifies an existing file if it would lead to a change
 -}
-writeSourceCodeFileIfNecessary :: String -> String -> [ String ] -> String -> IO Bool
+writeSourceCodeFileIfNecessary 
+    -- | path of folder, ending with '/' (or '\' for windows
+    :: String 
+    -- | name of module, without file extension
+    -> String 
+    -- | elements to be exported and list in an automaticalls generated export list
+    -> [ String ] 
+    -- | source without module and export declaration
+    -> String 
+    -- | indication whether the function has been executed successfully
+    -> IO Bool
 writeSourceCodeFileIfNecessary folderPath moduleName lExportElements sourceCodeWithoutModuleDeclaration =
     do
         Dir.createDirectoryIfMissing True folderPath
@@ -114,9 +134,9 @@ writeSourceCodeFileIfNecessary folderPath moduleName lExportElements sourceCodeW
         sExportList' [] = ""
         sExportList' ( exportElement : exportElement2 : lrExportElements ) = "        " ++ exportElement ++ ", \n" ++ sExportList' (exportElement2 : lrExportElements)
         sExportList' [exportElement] = "        " ++ exportElement ++ "\n"
-        
 
+-- TODO: Add documentation
 deleteSourceCodeFile ::String -> String -> IO ()
-deleteSourceCodeFile folderPath moduleName =
+deleteSourceCodeFile folderPath moduleName = 
     do
         Dir.removeFile (folderPath ++ moduleName ++ ".hs")

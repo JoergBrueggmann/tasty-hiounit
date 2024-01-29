@@ -1,7 +1,7 @@
 # Test.Tasty.HIOUnit in package tasty-hiounit
 A test provider for the test framework *tasty*. Like like *tasty-hunit* it enables unit tests of IO functions that may use *stdin* where *stdout*, *stderr* and exit code is checked.
 
-NOTE: This package needs at least version 1.5 of package tasty. This is why 'extra-deps:' has been set to 'tasty-1.5' in file 'stack.yaml'.
+NOTE: This package needs at least version 1.5 of package tasty and version 0.10.3 of tasty-quickcheck. This is why 'extra-deps:' has been set to 'tasty-1.5' and tasty-quickcheck-0.10.3 in file 'stack.yaml'.
 
 ## Background
 The test framework *tasty* automates a lot of different kinds of tests and provides an overview of all tests at the end.
@@ -52,7 +52,7 @@ The code below creates module 'Fib' and calls a program that compiles and execut
     tgIOFib = 
         T.sequentialTestGroup   -- <<< NOTE: Unit tests with HIOUnit have to be executed sequential.
             "Fib.ioFib"
-            T.AllSucceed
+            T.AllFinish
             [
                 -- unit test with generated stdio input 
                 -- edge cases using values arround zero, executing the code as defined by function 'fdefFib'

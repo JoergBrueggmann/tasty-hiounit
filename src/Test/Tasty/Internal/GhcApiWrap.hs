@@ -1,10 +1,18 @@
 {-|
-Description : provides more convinient functions to use the GHC API.
+Description : ... convinient functions to use the GHC API.
 Copyright   : (c) Jörg Karl-Heinz Walter Brüggmann, 2021-2024
 License     : BSD-3-Clause
 Maintainer  : info@joerg-brueggmann.de
 Stability   : experimental
 Portability : POSIX
+
+The module 'Test.Tasty.Internal.GhcApiWrap' provides helper functions to use the GHC API more conviniently.
+
+Suggested import line:
+
+    @
+import qualified Test.Tasty.Internal.GhcApiWrap as Ghc
+    @
 -}
 
 
@@ -25,6 +33,7 @@ import qualified GHC.Paths as Pth
 import Data.Functor ((<&>))
 
 
+-- TODO: Add documentation
 compileAndLoad 
     :: forall a. T.Typeable a 
     => String 
@@ -48,6 +57,7 @@ compileAndLoad dir mdl sym = runGhcCatched >>= ethSym
     ethSym' Nothing sErr = Left sErr
     symbolType = T.typeRep (Px.Proxy :: Px.Proxy a)
 
+-- TODO: Add documentation
 loadModule 
     :: Ghc.GhcMonad m 
     => String 

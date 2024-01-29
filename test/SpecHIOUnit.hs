@@ -41,16 +41,27 @@ tgIOFib :: T.TestTree
 tgIOFib = 
     T.sequentialTestGroup   -- <<< NOTE: Unit tests with HIOUnit have to be executed sequential.
         "Fib.ioFib"
-        T.AllSucceed
+        T.AllFinish
         [
             -- unit test with generated stdio input 
-            -- edge cases using values arround zero, executing the code as defined by function 'fdefFib'
+            -- edge cases using values arround zero, executing the code as defined by function *fdefFib*
             HIOU.testCase "Fib.ioFib -2" (HIOU.IOTestParameter ( Just "-2" ) fdefFib ( Just "-1" ) ( Just "" ) ( Just 0 )), 
             HIOU.testCase "Fib.ioFib -1" (HIOU.IOTestParameter ( Just "-1" ) fdefFib ( Just "1" ) ( Just "" ) ( Just 0 )), 
             HIOU.testCase "Fib.ioFib 0" (HIOU.IOTestParameter ( Just "0" ) fdefFib ( Just "0" ) ( Just "" ) ( Just 0 )), 
             HIOU.testCase "Fib.ioFib 1" (HIOU.IOTestParameter ( Just "1" ) fdefFib ( Just "1" ) ( Just "" ) ( Just 0 )), 
             HIOU.testCase "Fib.ioFib 2" (HIOU.IOTestParameter ( Just "2" ) fdefFib ( Just "1" ) ( Just "" ) ( Just 0 )), 
             HIOU.testCase "Fib.ioFib 3" (HIOU.IOTestParameter ( Just "3" ) fdefFib ( Just "2" ) ( Just "" ) ( Just 0 ))
+
+{-
+    manual tests
+            HIOU.testCase "Fib.ioFib 1" (HIOU.IOTestParameter ( Just "1" ) fdefFib Nothing Nothing Nothing), -- shall be successful
+            HIOU.testCase "Fib.ioFib 1" (HIOU.IOTestParameter ( Just "1" ) fdefFib ( Just "1" ) Nothing Nothing), -- shall be successful
+            HIOU.testCase "Fib.ioFib 1" (HIOU.IOTestParameter ( Just "1" ) fdefFib Nothing ( Just "" ) Nothing), -- shall be successful
+            HIOU.testCase "Fib.ioFib 1" (HIOU.IOTestParameter ( Just "1" ) fdefFib Nothing Nothing ( Just 0 )), -- shall be successful
+            HIOU.testCase "Fib.ioFib 1" (HIOU.IOTestParameter ( Just "1" ) fdefFib ( Just "2" ) Nothing Nothing), -- shall fail
+            HIOU.testCase "Fib.ioFib 1" (HIOU.IOTestParameter ( Just "1" ) fdefFib Nothing ( Just "-" ) Nothing), -- shall fail
+            HIOU.testCase "Fib.ioFib 1" (HIOU.IOTestParameter ( Just "1" ) fdefFib Nothing Nothing ( Just 1 )) -- shall fail
+-}
         ]
 
 tgFib :: T.TestTree

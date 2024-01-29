@@ -1,15 +1,18 @@
 ﻿{-|
-Description : provides helper functions to execute shell commands.
+Description : ... executes shell commands.
 Copyright   : (c) Jörg Karl-Heinz Walter Brüggmann, 2021-2024
 License     : BSD-3-Clause
 Maintainer  : info@joerg-brueggmann.de
 Stability   : experimental
 Portability : POSIX
 
-The module Type provides advanced helper functions to execute shell commands.
+The module 'Test.Tasty.Internal.ShellExecute' provides helper functions to execute shell commands.
 
-Suggested import line: 'import qualified ShellExecute as Sh'
+Suggested import line:
 
+    @
+import qualified Test.Tasty.Internal.ShellExecute as Sh
+    @
 -}
 
 
@@ -29,6 +32,7 @@ import qualified Data.Functor as Fnc
 import qualified Control.Monad as M
 
 
+-- TODO: Add documentation
 runCommandWithIO :: Maybe FilePath -> Maybe FilePath -> String -> [String] -> Maybe String -> IO (Maybe (String, String, Int))
 runCommandWithIO msShell msWorkingDirectory sCommand lsArgs msInputToPassAsStdIn = 
     do
@@ -53,10 +57,12 @@ runCommandWithIO msShell msWorkingDirectory sCommand lsArgs msInputToPassAsStdIn
         forkIO' :: IO () -> IO ()
         forkIO' io = M.void (Conc.forkIO io)
 
+-- TODO: Add documentation
 fromExitCode :: Sys.ExitCode -> Int
 fromExitCode Sys.ExitSuccess = 0
 fromExitCode (Sys.ExitFailure exitCode) = exitCode
 
+-- TODO: Add documentation
 runInteractiveCommandInDir :: Maybe FilePath -> Maybe FilePath -> String -> [String] -> IO (Maybe (SyIO.Handle, SyIO.Handle, SyIO.Handle, Proc.ProcessHandle))
 runInteractiveCommandInDir msShell msWorkingDirectory sCommand lsArgs = do
         (mhStdIn, mhStdOut, mhStdErr, hProcess) <-
@@ -76,5 +82,6 @@ runInteractiveCommandInDir msShell msWorkingDirectory sCommand lsArgs = do
     where
         processSpec = Sfr.ifJust msShell (\msShell' -> Proc.proc msShell' (["-c", sCommand] ++ lsArgs)) (Proc.proc sCommand lsArgs)
 
+-- TODO: Add documentation
 hGetContentsStrictlyAnd :: SyIO.Handle -> (String -> IO b) -> IO b
 hGetContentsStrictlyAnd h f = SyIO.hGetContents h >>= \s -> length s `seq` f s

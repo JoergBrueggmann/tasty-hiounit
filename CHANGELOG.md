@@ -8,6 +8,28 @@ and this project adheres to the
 
 ## Unreleased
 
+## 0.1.3 - 2024-01-29
+
+### Added
+
+- check list for releases file 'ReleaseCheckList.md'
+- synopsys and category to file 'package.yaml'
+- add boundaries to dependencies in file 'package.yaml'
+- entry 'tasty-quickcheck-0.10.3' to 'extra-deps' in file 'stack.yaml'
+
+### Fixed
+
+- - none -
+
+### Changed
+
+- prepare for upload to hackage also by applying file 'ReleaseCheckList.md'
+- example in file 'README.md' and 'HIOUnit.hs'
+
+### Removed
+
+- - none -
+
 ## 0.1.2 - 2024-01-27 - 07:45
 
 ### Added
